@@ -137,8 +137,8 @@ jobs:
           # ---------- ddns-go (仅 openwrt 需要从项目复制) ----------
           if [ "${{ matrix.source.name }}" = "openwrt" ]; then
             echo "Copying ddns-go from project repo"
-            cp -rf ../xg-140g-md/package/ddns-go package/
-            cp -rf ../xg-140g-md/package/luci-app-ddns-go package/
+            cp -rf ../package/ddns-go package/
+            cp -rf ../package/luci-app-ddns-go package/
           fi
 
           make defconfig
