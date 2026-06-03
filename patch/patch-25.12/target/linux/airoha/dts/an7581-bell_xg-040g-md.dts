@@ -18,7 +18,6 @@
 	chosen {
 		bootargs = "ubi.mtd=ubi root=ubi0:rootfs rootfstype=squashfs ro rootwait console=ttyS0,115200 earlycon";
 		stdout-path = "serial0:115200n8";
-		/* linux,usable-memory-range = <0x0 0x80200000 0x0 0x1fe00000>; */
 	};
 
 	memory@80000000 {
