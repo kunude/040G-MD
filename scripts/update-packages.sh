@@ -113,17 +113,14 @@ PASSWALL_MAKEFILE="./luci-app-passwall/Makefile"
  	rm -rf openwrt-passwall-packages
  fi
 
-# ddns-go 不安装（openwrt 没有官方版本，且不喜欢 sirpdboy 版本）
-# immortalwrt 有官方 ddns-go，无需处理
-echo " "
-echo "=========================================="
-echo "Skipping ddns-go installation"
-echo "=========================================="
-
-echo " "
-echo "=========================================="
-echo "Package updates completed!"
-echo "=========================================="
+# ddns-go 使用项目仓库中的自定义版本（如果存在）
+if [ -d "../package/custom/ddns-go" ]; then
+    echo "Using custom ddns-go from project repository"
+elif [ -f "../feeds/packages/net/ddns-go/Makefile" ]; then
+    echo "Using official ddns-go from feeds"
+else
+    echo "ddns-go not available, skipping"
+fi
 
 # ========== 强制写入第三方包到 .config ==========
 CONFIG_FILE="../.config"
