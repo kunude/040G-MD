@@ -49,6 +49,11 @@ jobs:
           rm -rf openwrt/target/linux/generic/backport-6.12/435-v6.19-mtd-spinand-add-support-for-FudanMicro-FM25S01BI3.patch
 
           mv -f config/.config openwrt/
+          
+           # ========== 复制自定义包（ddns-go）==========
+          mkdir -p openwrt/package/custom
+          cp -af package/ddns-go openwrt/package/custom/
+          cp -af package/luci-app-ddns-go openwrt/package/custom/
 
           cp -af patch/patch-25.12/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic openwrt/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
           cp -af patch/patch-25.12/package/kernel/linux/files/sysctl-nf-conntrack.conf openwrt/package/kernel/linux/files/sysctl-nf-conntrack.conf
