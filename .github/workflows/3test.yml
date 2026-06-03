@@ -1,4 +1,4 @@
-name: Build 3test
+name: Build xg-140g-md
 on: workflow_dispatch
 jobs:
   build:
@@ -48,75 +48,72 @@ jobs:
         run: |
           rm -rf openwrt/target/linux/generic/backport-6.12/435-v6.19-mtd-spinand-add-support-for-FudanMicro-FM25S01BI3.patch
 
-          mv -f config/.config openwrt/
+          mv -f xg-140g-md/.config openwrt/
 
-          cp -af patch/patch-25.12/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic openwrt/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
-          cp -af patch/patch-25.12/package/kernel/linux/files/sysctl-nf-conntrack.conf openwrt/package/kernel/linux/files/sysctl-nf-conntrack.conf
-          cp -af patch/patch-25.12/package/kernel/linux/modules/netdevices.mk openwrt/package/kernel/linux/modules/netdevices.mk
-          cp -af patch/patch-25.12/package/base-files/files/etc/uci-defaults/99_fix-airoha-mac openwrt/package/base-files/files/etc/uci-defaults/99_fix-airoha-mac
+          cp -af xg-140g-md/patch-25.12/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic openwrt/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
+          cp -af xg-140g-md/patch-25.12/package/kernel/linux/files/sysctl-nf-conntrack.conf openwrt/package/kernel/linux/files/sysctl-nf-conntrack.conf
+          cp -af xg-140g-md/patch-25.12/package/kernel/linux/modules/netdevices.mk openwrt/package/kernel/linux/modules/netdevices.mk
+          cp -af xg-140g-md/patch-25.12/package/base-files/files/etc/uci-defaults/99_fix-airoha-mac openwrt/package/base-files/files/etc/uci-defaults/99_fix-airoha-mac
 
-          cp -af patch/patch-25.12/target/linux/airoha/an7581/base-files/etc/board.d/02_network openwrt/target/linux/airoha/an7581/base-files/etc/board.d/02_network
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/an7581/base-files/etc/board.d/02_network openwrt/target/linux/airoha/an7581/base-files/etc/board.d/02_network
           mkdir -p openwrt/target/linux/airoha/an7581/base-files/lib/upgrade/
-          cp -af patch/patch-25.12/target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh openwrt/target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh openwrt/target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh
 
-          cp -af patch/patch-25.12/target/linux/airoha/an7581/config-6.12 openwrt/target/linux/airoha/an7581/config-6.12
-          cp -af patch/patch-25.12/target/linux/airoha/an7581/target.mk openwrt/target/linux/airoha/an7581/target.mk
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/an7581/config-6.12 openwrt/target/linux/airoha/an7581/config-6.12
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/an7581/target.mk openwrt/target/linux/airoha/an7581/target.mk
 
-          cp -af patch/patch-25.12/target/linux/airoha/dts/an7581.dtsi openwrt/target/linux/airoha/dts/an7581.dtsi
-          cp -af patch/patch-25.12/target/linux/airoha/dts/an7581-npu-mt7996.dtsi openwrt/target/linux/airoha/dts/an7581-npu-mt7996.dtsi
-          cp -af patch/patch-25.12/target/linux/airoha/dts/an7581-bell_xg-040g-md.dts openwrt/target/linux/airoha/dts/an7581-bell_xg-040g-md.dts
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/dts/an7581.dtsi openwrt/target/linux/airoha/dts/an7581.dtsi
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/dts/an7581-npu-mt7996.dtsi openwrt/target/linux/airoha/dts/an7581-npu-mt7996.dtsi
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/dts/an7581-bell_xg-040g-md.dts openwrt/target/linux/airoha/dts/an7581-bell_xg-040g-md.dts
 
-          cp -af patch/patch-25.12/target/linux/airoha/image/an7581.mk openwrt/target/linux/airoha/image/an7581.mk
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/image/an7581.mk openwrt/target/linux/airoha/image/an7581.mk
 
-          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/117-03-airoha_npu_eagle_add_ser.patch openwrt/target/linux/airoha/patches-6.12/117-03-airoha_npu_eagle_add_ser.patch
-          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/620-net-pcs-airoha-fix-USXGMII-rate-adaptation-on-speed.patch openwrt/target/linux/airoha/patches-6.12/620-net-pcs-airoha-fix-USXGMII-rate-adaptation-on-speed.patch
-          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/621-net-pcs-airoha-AN7581-add-global-digital-reset-for.patch openwrt/target/linux/airoha/patches-6.12/621-net-pcs-airoha-AN7581-add-global-digital-reset-for.patch
-          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/910-02-usb-pcie.patch openwrt/target/linux/airoha/patches-6.12/910-02-usb-pcie.patch
-          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/999-dsa-01-add-mt7531-netlink-support.patch openwrt/target/linux/airoha/patches-6.12/999-dsa-01-add-mt7531-netlink-support.patch
-          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/039-v6.14-cpufreq-airoha-Add-EN7581-CPUFreq-SMCCC-driver.patch openwrt/target/linux/airoha/patches-6.12/039-v6.14-cpufreq-airoha-Add-EN7581-CPUFreq-SMCCC-driver.patch
-          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/040-v6.14-pmdomain-airoha-Add-Airoha-CPU-PM-Domain-support.patch openwrt/target/linux/airoha/patches-6.12/040-v6.14-pmdomain-airoha-Add-Airoha-CPU-PM-Domain-support.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/patches-6.12/117-03-airoha_npu_eagle_add_ser.patch openwrt/target/linux/airoha/patches-6.12/117-03-airoha_npu_eagle_add_ser.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/patches-6.12/620-net-pcs-airoha-fix-USXGMII-rate-adaptation-on-speed.patch openwrt/target/linux/airoha/patches-6.12/620-net-pcs-airoha-fix-USXGMII-rate-adaptation-on-speed.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/patches-6.12/621-net-pcs-airoha-AN7581-add-global-digital-reset-for.patch openwrt/target/linux/airoha/patches-6.12/621-net-pcs-airoha-AN7581-add-global-digital-reset-for.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/patches-6.12/910-02-usb-pcie.patch openwrt/target/linux/airoha/patches-6.12/910-02-usb-pcie.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/patches-6.12/999-dsa-01-add-mt7531-netlink-support.patch openwrt/target/linux/airoha/patches-6.12/999-dsa-01-add-mt7531-netlink-support.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/patches-6.12/039-v6.14-cpufreq-airoha-Add-EN7581-CPUFreq-SMCCC-driver.patch openwrt/target/linux/airoha/patches-6.12/039-v6.14-cpufreq-airoha-Add-EN7581-CPUFreq-SMCCC-driver.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/airoha/patches-6.12/040-v6.14-pmdomain-airoha-Add-Airoha-CPU-PM-Domain-support.patch openwrt/target/linux/airoha/patches-6.12/040-v6.14-pmdomain-airoha-Add-Airoha-CPU-PM-Domain-support.patch
 
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/675-01-net-export-__dev_fill_forward_path-and-br_fdb_find_rcu.patch openwrt/target/linux/generic/pending-6.12/675-01-net-export-__dev_fill_forward_path-and-br_fdb_find_rcu.patch
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/675-02-nft_flow_offload-add-bridging-support.patch openwrt/target/linux/generic/pending-6.12/675-02-nft_flow_offload-add-bridging-support.patch
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/675-03-nft_flow_offload-add-DEV_PATH_MTK_WDMA-path.patch openwrt/target/linux/generic/pending-6.12/675-03-nft_flow_offload-add-DEV_PATH_MTK_WDMA-path.patch
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/675-04-nft_flow_offload-add-vlan-passthrough-support.patch openwrt/target/linux/generic/pending-6.12/675-04-nft_flow_offload-add-vlan-passthrough-support.patch
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/675-05-nft_flow_offload-bridge-dst-on-master.patch openwrt/target/linux/generic/pending-6.12/675-05-nft_flow_offload-bridge-dst-on-master.patch
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/675-06-nft_flow_offload-review-follow-up-comments.patch openwrt/target/linux/generic/pending-6.12/675-06-nft_flow_offload-review-follow-up-comments.patch
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/675-07-netfilter-nft_flow_offload-fix-l2-bridge-leaks.patch openwrt/target/linux/generic/pending-6.12/675-07-netfilter-nft_flow_offload-fix-l2-bridge-leaks.patch
-          cp -af patch/patch-25.12/target/linux/generic/pending-6.12/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch openwrt/target/linux/generic/pending-6.12/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/675-01-net-export-__dev_fill_forward_path-and-br_fdb_find_rcu.patch openwrt/target/linux/generic/pending-6.12/675-01-net-export-__dev_fill_forward_path-and-br_fdb_find_rcu.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/675-02-nft_flow_offload-add-bridging-support.patch openwrt/target/linux/generic/pending-6.12/675-02-nft_flow_offload-add-bridging-support.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/675-03-nft_flow_offload-add-DEV_PATH_MTK_WDMA-path.patch openwrt/target/linux/generic/pending-6.12/675-03-nft_flow_offload-add-DEV_PATH_MTK_WDMA-path.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/675-04-nft_flow_offload-add-vlan-passthrough-support.patch openwrt/target/linux/generic/pending-6.12/675-04-nft_flow_offload-add-vlan-passthrough-support.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/675-05-nft_flow_offload-bridge-dst-on-master.patch openwrt/target/linux/generic/pending-6.12/675-05-nft_flow_offload-bridge-dst-on-master.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/675-06-nft_flow_offload-review-follow-up-comments.patch openwrt/target/linux/generic/pending-6.12/675-06-nft_flow_offload-review-follow-up-comments.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/675-07-netfilter-nft_flow_offload-fix-l2-bridge-leaks.patch openwrt/target/linux/generic/pending-6.12/675-07-netfilter-nft_flow_offload-fix-l2-bridge-leaks.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/pending-6.12/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch openwrt/target/linux/generic/pending-6.12/700-netfilter-nft_flow_offload-handle-netdevice-events-f.patch
           
-          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/400-mtd-spinand-Support-fmsh.patch openwrt/target/linux/generic/hack-6.12/400-mtd-spinand-Support-fmsh.patch
-          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/430-v6.14-mtd-spinand-Introduce-a-way-to-avoid-raw-access.patch openwrt/target/linux/generic/hack-6.12/430-v6.14-mtd-spinand-Introduce-a-way-to-avoid-raw-access.patch
-          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/431-v6.14-mtd-spinand-Add-support-for-SkyHigh-S35ML-3-family.patch openwrt/target/linux/generic/hack-6.12/431-v6.14-mtd-spinand-Add-support-for-SkyHigh-S35ML-3-family.patch
-          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/600-mtd-spinand-add-skyhigh-robust-read-workaround.patch openwrt/target/linux/generic/hack-6.12/600-mtd-spinand-add-skyhigh-robust-read-workaround.patch
-          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch openwrt/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/hack-6.12/400-mtd-spinand-Support-fmsh.patch openwrt/target/linux/generic/hack-6.12/400-mtd-spinand-Support-fmsh.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/hack-6.12/430-v6.14-mtd-spinand-Introduce-a-way-to-avoid-raw-access.patch openwrt/target/linux/generic/hack-6.12/430-v6.14-mtd-spinand-Introduce-a-way-to-avoid-raw-access.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/hack-6.12/431-v6.14-mtd-spinand-Add-support-for-SkyHigh-S35ML-3-family.patch openwrt/target/linux/generic/hack-6.12/431-v6.14-mtd-spinand-Add-support-for-SkyHigh-S35ML-3-family.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/hack-6.12/600-mtd-spinand-add-skyhigh-robust-read-workaround.patch openwrt/target/linux/generic/hack-6.12/600-mtd-spinand-add-skyhigh-robust-read-workaround.patch
+          cp -af xg-140g-md/patch-25.12/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch openwrt/target/linux/generic/hack-6.12/721-net-add-packet-mangeling.patch
 
           sed -i 's/dnsmasq/dnsmasq-full/g' openwrt/include/target.mk
 
-      - name: Update feeds, add airoha-npu and passwall2
+      - name: Update feeds, add airoha-npu, passwall2 and ddns-go
         working-directory: openwrt
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-          # ---------- 原有的 airoha-npu ----------
+          # ---------- luci-app-airoha-npu ----------
           git clone https://github.com/rchen14b/luci-app-airoha-npu.git package/luci-app-airoha-npu
           sed -i 's|../../luci.mk|$(TOPDIR)/feeds/luci/luci.mk|' package/luci-app-airoha-npu/Makefile
           sed -i 's/"getFrameEngine" \]/"getFrameEngine", "getVlanOffload", "getPPPoEOffload" ]/' package/luci-app-airoha-npu/root/usr/share/rpcd/acl.d/luci-app-airoha-npu.json
           sed -i 's/"setOverclock" \]/"setOverclock", "setVlanOffload", "setPPPoEOffload" ]/' package/luci-app-airoha-npu/root/usr/share/rpcd/acl.d/luci-app-airoha-npu.json
           ls package/luci-app-airoha-npu && cat package/luci-app-airoha-npu/Makefile && cat package/luci-app-airoha-npu/root/usr/share/rpcd/acl.d/luci-app-airoha-npu.json
 
-          # ---------- 新增 passwall2 及依赖 ----------
-          # 删除可能冲突的 sing-box（feeds 和 package/feeds 两个位置）
+          # ---------- passwall2 ----------
           rm -rf feeds/packages/net/sing-box
           rm -rf package/feeds/packages/sing-box
 
-          # 克隆 passwall2（主仓库，含核心包和 luci 界面）
           git clone --depth=1 --single-branch --branch main \
             https://github.com/Openwrt-Passwall/openwrt-passwall2.git \
             package/passwall2
 
-          # 修补 passwall2 的 Lua 文件（防 nil 错误）
           LUA_FILE="package/passwall2/luci-app-passwall2/luasrc/model/cbi/passwall2/client/global.lua"
           if [ -f "$LUA_FILE" ]; then
             sed -i 's#local dns_shunt_val = s.fields\["dns_shunt"\]:formvalue(section)#local dns_shunt_val = (s.fields["dns_shunt"] and s.fields["dns_shunt"]:formvalue(section)) or ""#g' "$LUA_FILE"
@@ -124,14 +121,12 @@ jobs:
             sed -i 's#s.fields\["dns_mode"\]:formvalue(section) == "sing-box" or s.fields\["smartdns_dns_mode"\]:formvalue(section) == "sing-box"#((s.fields["dns_mode"] and s.fields["dns_mode"]:formvalue(section)) == "sing-box") or ((s.fields["smartdns_dns_mode"] and s.fields["smartdns_dns_mode"]:formvalue(section)) == "sing-box")#g' "$LUA_FILE"
           fi
 
-          # 禁用 passwall2 中可能坏掉的 ShadowsocksR 组件
           SSR_MAKEFILE="package/passwall2/luci-app-passwall2/Makefile"
           if [ -f "$SSR_MAKEFILE" ]; then
             sed -i '/config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Libev_Client/,/default y/s/default y/default n/' "$SSR_MAKEFILE"
             sed -i '/config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Libev_Server/,/default n/s/default n/default n/' "$SSR_MAKEFILE"
           fi
 
-          # 克隆并安装 passwall 依赖包（sing-box, xray, hysteria 等）
           git clone --depth=1 --single-branch --branch main \
             https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
           if [ -d "openwrt-passwall-packages" ]; then
@@ -139,9 +134,16 @@ jobs:
             rm -rf openwrt-passwall-packages
           fi
 
+          # ---------- ddns-go (仅 openwrt 需要从项目复制) ----------
+          if [ "${{ matrix.source.name }}" = "openwrt" ]; then
+            echo "Copying ddns-go from project repo"
+            cp -rf ../xg-140g-md/package/ddns-go package/
+            cp -rf ../xg-140g-md/package/luci-app-ddns-go package/
+          fi
+
           make defconfig
 
-      - name: Enable LuCI, WireGuard and passwall2
+      - name: Enable LuCI, WireGuard, passwall2 and ddns-go
         run: |
           # 原有启用的软件包
           sed -i 's/# CONFIG_PACKAGE_luci is not set/CONFIG_PACKAGE_luci=y/g' openwrt/.config
@@ -156,12 +158,15 @@ jobs:
           sed -i 's/# CONFIG_PACKAGE_luci-app-cpufreq is not set/CONFIG_PACKAGE_luci-app-cpufreq=y/g' openwrt/.config
           sed -i 's/# CONFIG_PACKAGE_luci-app-airoha-npu is not set/CONFIG_PACKAGE_luci-app-airoha-npu=y/g' openwrt/.config
 
-          # ---------- 新增 passwall2 及相关依赖的启用 ----------
-          # 因为 .config 中可能没有这些包的注释行，直接用 echo 追加更可靠
+          # passwall2 及依赖
           echo "CONFIG_PACKAGE_luci-app-passwall2=y" >> openwrt/.config
           echo "CONFIG_PACKAGE_xray-core=y" >> openwrt/.config
           echo "CONFIG_PACKAGE_sing-box=y" >> openwrt/.config
-          # 可选：如果需要 smartdns 之类，也可以在这里追加
+
+          # ddns-go
+          echo "CONFIG_PACKAGE_ddns-go=y" >> openwrt/.config
+          echo "CONFIG_PACKAGE_luci-app-ddns-go=y" >> openwrt/.config
+          echo "CONFIG_PACKAGE_luci-i18n-ddns-go-zh-cn=y" >> openwrt/.config
 
           cd openwrt && make defconfig
 
