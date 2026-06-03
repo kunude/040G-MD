@@ -125,6 +125,10 @@ jobs:
           ensure_config "CONFIG_PACKAGE_udpxy"
           ensure_config "CONFIG_PACKAGE_luci-app-udpxy"
           ensure_config "CONFIG_PACKAGE_luci-i18n-udpxy-zh-cn"
+          # ddns-go 统一启用（openwrt 用自定义包，immortalwrt 用官方 feeds）
+          ensure_config "CONFIG_PACKAGE_ddns-go"
+          ensure_config "CONFIG_PACKAGE_luci-app-ddns-go"
+          ensure_config "CONFIG_PACKAGE_luci-i18n-ddns-go-zh-cn"
 
           # ddns-go 在 immortalwrt 上启用（官方 feeds 存在）
           # openwrt 没有官方 ddns-go，不启用
