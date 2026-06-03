@@ -1,0 +1,26 @@
+name: Auto-Clean
+
+on:
+  # 自动清理：每天早上9点
+  schedule:
+    - cron: 0 1 * * *
+  # 手动清理
+  workflow_dispatch:
+
+jobs:
+  auto_clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Old Workflows
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          retain_days: 0
+          keep_minimum_runs: 1
+          token: ${{ secrets.LEDE }}
+      - name: Delete Old Releases
+        uses: dev-drprasad/delete-older-releases@master
+        with:
+          keep_latest: 2
+          delete_tags: true
+        env: 
+          GITHUB_TOKEN: ${{ secrets.LEDE }}

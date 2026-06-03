@@ -1,0 +1,173 @@
+name: Build xg-040g-md for me(test)
+on: workflow_dispatch
+jobs:
+  build:
+    name: ${{ matrix.source.tag_prefix }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TZ: Asia/Shanghai
+      CCACHE_DIR: ${{ github.workspace }}/openwrt/.ccache
+    strategy:
+      fail-fast: false
+      matrix:
+        source:
+          - name: openwrt
+            url: https://github.com/openwrt/openwrt/archive/refs/tags/v25.12.4.tar.gz
+            tag_prefix: openwrt-xg-040g-md
+            cache_key: openwrt
+          - name: immortalwrt
+            url: https://github.com/immortalwrt/immortalwrt/archive/refs/tags/v25.12.0.tar.gz
+            tag_prefix: immortalwrt-xg-040g-md
+            cache_key: immortalwrt
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clean system
+        run: |
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /usr/local/lib/android
+          sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* adoptopenjdk* mysql* php* mongodb* dotnet* moby* snapd* || true
+          sudo -E apt-get -y autoremove --purge && sudo -E apt-get clean
+
+      - name: Install depends
+        run: |
+          sudo apt update -y
+          sudo apt install -y build-essential clang flex bison g++ gawk \
+          gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev \
+          python3-setuptools rsync swig unzip zlib1g-dev file wget ccache
+
+      - name: Clone source
+        run: |
+          wget ${{ matrix.source.url }}
+          tar -xzf *.tar.gz
+          mv $(find . -maxdepth 1 -type d -name openwrt-* -o -name immortalwrt-* | head -1) openwrt
+
+          ./openwrt/scripts/getver.sh
+
+      - name: Prepare config and patches
+        run: |
+          rm -rf openwrt/target/linux/generic/backport-6.12/435-v6.19-mtd-spinand-add-support-for-FudanMicro-FM25S01BI3.patch
+
+          mv -f config/.config openwrt/
+
+          cp -af patch/patch-25.12/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic openwrt/package/boot/uboot-tools/uboot-envtools/files/mediatek_filogic
+          cp -af patch/patch-25.12/package/kernel/linux/files/sysctl-nf-conntrack.conf openwrt/package/kernel/linux/files/sysctl-nf-conntrack.conf
+          cp -af patch/patch-25.12/package/kernel/linux/modules/netdevices.mk openwrt/package/kernel/linux/modules/netdevices.mk
+          cp -af patch/patch-25.12/package/base-files/files/etc/uci-defaults/99_fix-airoha-mac openwrt/package/base-files/files/etc/uci-defaults/99_fix-airoha-mac
+
+          cp -af patch/patch-25.12/target/linux/airoha/an7581/base-files/etc/board.d/02_network openwrt/target/linux/airoha/an7581/base-files/etc/board.d/02_network
+          mkdir -p openwrt/target/linux/airoha/an7581/base-files/lib/upgrade/
+          cp -af patch/patch-25.12/target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh openwrt/target/linux/airoha/an7581/base-files/lib/upgrade/platform.sh
+          cp -af patch/patch-25.12/target/linux/airoha/an7581/config-6.12 openwrt/target/linux/airoha/an7581/config-6.12
+          cp -af patch/patch-25.12/target/linux/airoha/an7581/target.mk openwrt/target/linux/airoha/an7581/target.mk
+          cp -af patch/patch-25.12/target/linux/airoha/dts/an7581.dtsi openwrt/target/linux/airoha/dts/an7581.dtsi
+          cp -af patch/patch-25.12/target/linux/airoha/dts/an7581-npu-mt7996.dtsi openwrt/target/linux/airoha/dts/an7581-npu-mt7996.dtsi
+          cp -af patch/patch-25.12/target/linux/airoha/image/an7581.mk openwrt/target/linux/airoha/image/an7581.mk
+          cp -af patch/patch-25.12/target/linux/airoha/dts/an7581-bell_xg-040g-md.dts openwrt/target/linux/airoha/dts/an7581-bell_xg-040g-md.dts
+          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/117-03-airoha_npu_eagle_add_ser.patch openwrt/target/linux/airoha/patches-6.12/117-03-airoha_npu_eagle_add_ser.patch
+          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/620-net-pcs-airoha-fix-USXGMII-rate-adaptation-on-speed.patch openwrt/target/linux/airoha/patches-6.12/620-net-pcs-airoha-fix-USXGMII-rate-adaptation-on-speed.patch
+          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/621-net-pcs-airoha-AN7581-add-global-digital-reset-for.patch openwrt/target/linux/airoha/patches-6.12/621-net-pcs-airoha-AN7581-add-global-digital-reset-for.patch
+          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/910-02-usb-pcie.patch openwrt/target/linux/airoha/patches-6.12/910-02-usb-pcie.patch
+          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/999-dsa-01-add-mt7531-netlink-support.patch openwrt/target/linux/airoha/patches-6.12/999-dsa-01-add-mt7531-netlink-support.patch
+          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/039-v6.14-cpufreq-airoha-Add-EN7581-CPUFreq-SMCCC-driver.patch openwrt/target/linux/airoha/patches-6.12/039-v6.14-cpufreq-airoha-Add-EN7581-CPUFreq-SMCCC-driver.patch
+          cp -af patch/patch-25.12/target/linux/airoha/patches-6.12/040-v6.14-pmdomain-airoha-Add-Airoha-CPU-PM-Domain-support.patch openwrt/target/linux/airoha/patches-6.12/040-v6.14-pmdomain-airoha-Add-Airoha-CPU-PM-Domain-support.patch
+
+          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/400-mtd-spinand-Support-fmsh.patch openwrt/target/linux/generic/hack-6.12/400-mtd-spinand-Support-fmsh.patch
+          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/430-v6.14-mtd-spinand-Introduce-a-way-to-avoid-raw-access.patch openwrt/target/linux/generic/hack-6.12/430-v6.14-mtd-spinand-Introduce-a-way-to-avoid-raw-access.patch
+          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/431-v6.14-mtd-spinand-Add-support-for-SkyHigh-S35ML-3-family.patch openwrt/target/linux/generic/hack-6.12/431-v6.14-mtd-spinand-Add-support-for-SkyHigh-S35ML-3-family.patch
+          cp -af patch/patch-25.12/target/linux/generic/hack-6.12/600-mtd-spinand-add-skyhigh-robust-read-workaround.patch openwrt/target/linux/generic/hack-6.12/600-mtd-spinand-add-skyhigh-robust-read-workaround.patch
+
+          #sed -i 's/dnsmasq/dnsmasq-full/g' openwrt/include/target.mk
+
+      - name: Update feeds and add luci-app-airoha-npu
+        run: |
+          cd openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a
+          git clone https://github.com/rchen14b/luci-app-airoha-npu.git package/luci-app-airoha-npu
+          sed -i 's|../../luci.mk|$(TOPDIR)/feeds/luci/luci.mk|' package/luci-app-airoha-npu/Makefile
+          sed -i 's/"getFrameEngine" \]/"getFrameEngine", "getVlanOffload", "getPPPoEOffload" ]/' package/luci-app-airoha-npu/root/usr/share/rpcd/acl.d/luci-app-airoha-npu.json
+          sed -i 's/"setOverclock" \]/"setOverclock", "setVlanOffload", "setPPPoEOffload" ]/' package/luci-app-airoha-npu/root/usr/share/rpcd/acl.d/luci-app-airoha-npu.json
+          ls package/luci-app-airoha-npu && cat package/luci-app-airoha-npu/Makefile && cat package/luci-app-airoha-npu/root/usr/share/rpcd/acl.d/luci-app-airoha-npu.json
+
+          # ========== 执行 update-packages.sh ==========
+          chmod +x ../scripts/update-packages.sh
+          cp ../scripts/update-packages.sh package/
+          cd package && ./update-packages.sh && cd ..
+          rm -f package/update-packages.sh
+
+          make defconfig
+
+      - name: Enable LuCI and Orthers(wireguard)
+        run: |
+          sed -i 's/# CONFIG_PACKAGE_luci is not set/CONFIG_PACKAGE_luci=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-app-package-manager is not set/CONFIG_PACKAGE_luci-app-package-manager=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-light is not set/CONFIG_PACKAGE_luci-light=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-theme-bootstrap is not set/CONFIG_PACKAGE_luci-theme-bootstrap=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-proto-wireguard is not set/CONFIG_PACKAGE_luci-proto-wireguard=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_kmod-wireguard is not set/CONFIG_PACKAGE_kmod-wireguard=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_wireguard-tools is not set/CONFIG_PACKAGE_wireguard-tools=y/g' openwrt/.config
+          sed -i 's/# CONFIG_LUCI_LANG_zh_Hans is not set/CONFIG_LUCI_LANG_zh_Hans=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_default-settings-chn is not set/CONFIG_PACKAGE_default-settings-chn=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-app-cpufreq is not set/CONFIG_PACKAGE_luci-app-cpufreq=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-app-airoha-npu is not set/CONFIG_PACKAGE_luci-app-airoha-npu=y/g' openwrt/.config
+          # 增删相关插件（先将相关值恢复）
+          sed -i 's/# CONFIG_PACKAGE_udpxy is not set/CONFIG_PACKAGE_udpxy=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-app-udpxy is not set/CONFIG_PACKAGE_luci-app-udpxy=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-i18n-udpxy-zh-cn is not set/CONFIG_PACKAGE_luci-i18n-udpxy-zh-cn=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-app-ttyd is not set/CONFIG_PACKAGE_luci-app-ttyd=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn is not set/CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y/g' openwrt/.config
+          sed -i 's/# CONFIG_PACKAGE_unzip is not set/CONFIG_PACKAGE_unzip=y/g' openwrt/.config
+
+          cd openwrt && make defconfig
+
+      - name: Show config
+        run: cat openwrt/.config
+
+      - name: Cache staging_dir and ccache
+        uses: actions/cache@v4
+        with:
+          path: |
+            openwrt/staging_dir
+            openwrt/.ccache
+          key: ${{ matrix.source.cache_key }}-${{ runner.os }}-${{ hashFiles('openwrt/.config') }}
+          restore-keys: ${{ matrix.source.cache_key }}-${{ runner.os }}-
+
+      - name: Download sources
+        run: cd openwrt && make -j $(nproc) download
+
+      - name: Prepare target/linux
+        run: cd openwrt && make -j $(nproc) target/linux/{clean,prepare} V=s
+
+      - name: Build ccache
+        run: cd openwrt && make -j $(nproc) tools/ccache/compile V=s
+
+      - name: Build firmware
+        run: cd openwrt && make -j $(nproc) V=s
+
+      - name: Clean up firmware artifacts (remove .zst and packages)
+        run: |
+          find openwrt/bin/targets/ -name "*.zst" -delete
+          rm -rf openwrt/bin/targets/*/packages
+
+      - name: Upload firmware as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.source.name }}-firmware   # 区分 openwrt 和 immortalwrt
+          path: openwrt/bin/targets/airoha/an7581/*
+          retention-days: 7
+
+      - name: Release firmware to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        if: success()   # 仅在构建成功时发布
+        with:
+          tag_name: ${{ matrix.source.tag_prefix }}-${{ github.run_number }}
+          name: "${{ matrix.source.name }} - Build #${{ github.run_number }}"
+          body: |
+            Automatic build from commit ${{ github.sha }}
+            - Source: ${{ matrix.source.name }}
+            - Version tag: ${{ matrix.source.tag_prefix }}-${{ github.run_number }}
+          files: openwrt/bin/targets/airoha/an7581/*   # 上传清理后的固件
+          generate_release_notes: false   # 避免自动生成可能触发警告
+          prerelease: true   # 或设为 false 作为正式版，根据需要调整
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
